@@ -10,5 +10,5 @@ import (
 func main() {
 	r := gin.Default()
 	router.InitRouter(r)
-	common.Run(r, "project-user", ":10001")
+	common.Run(r, "project-user", ":80")
 }

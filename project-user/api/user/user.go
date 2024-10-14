@@ -16,19 +16,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type HandlerUser struct {
+type Handler struct {
 	cache repo.Cache
 }
 
-func New() *HandlerUser {
-	user := HandlerUser{
+func NewHandler() *Handler {
+	user := Handler{
 		cache: dao.Rc,
 	}
 	return &user
 }
 
 // getCaptcha 获取验证码
-func (handler *HandlerUser) getCaptcha(c *gin.Context) {
+func (handler *Handler) getCaptcha(c *gin.Context) {
 	log.Println("正在生成验证码")
 	resp := &common.Result{}
 	// 1. 获取参数
@@ -50,7 +50,9 @@ func (handler *HandlerUser) getCaptcha(c *gin.Context) {
 		// 5. 存储验证码
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 		defer cancel()
-		err := handler.cache.Put(ctx, constant.MakeRedisKey(constant.UserCaptchaKey, mobile), code, 2*time.Minute)
+
+		redisKey := constant.MakeRedisKey(constant.UserCaptchaKey, mobile)
+		err := handler.cache.Put(ctx, constant.MakeRedisKey(redisKey, mobile), code, 2*time.Minute)
 		if err != nil {
 			c.JSON(http.StatusOK, resp.Error(http.StatusInternalServerError, "存储验证码失败"))
 			log.Fatalf("存储验证码失败：%v\n", err)
