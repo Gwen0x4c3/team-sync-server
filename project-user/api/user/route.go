@@ -13,7 +13,8 @@ type UserRouter struct {
 // Route 从这里定义user模块的路由
 func (ur *UserRouter) Route(r *gin.Engine) {
 	handler := &HandlerUser{}
-	r.GET("/project/login/getCaptcha", handler.getCaptcha)
+	// 验证码
+	r.POST("/project/login/getCaptcha", handler.getCaptcha)
 }
 
 func init() {
