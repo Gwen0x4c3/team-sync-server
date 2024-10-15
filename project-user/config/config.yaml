@@ -1,0 +1,14 @@
+server:
+  name: project-user
+  addr: ":80"
+zap:
+  debugFileName: "D:\\Learning\\Projects\\GO\\2.go-team-sync\\team-sync-server\\logs\\debug\\project-debug.log"
+  infoFileName: "D:\\Learning\\Projects\\GO\\2.go-team-sync\\team-sync-server\\logs\\info\\project-info.log"
+  warnFileName: "D:\\Learning\\Projects\\GO\\2.go-team-sync\\team-sync-server\\logs\\error\\project-error.log"
+  maxSize: 500
+  maxAge: 28
+  maxBackups: 3
+redis:
+  addr: "localhost:6379"
+  password: ""
+  db: 0
