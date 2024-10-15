@@ -1,8 +1,7 @@
 package user
 
 import (
-	"log"
-
+	"github.com/Gwen0x4c3/team-sync-server/project-common/logs"
 	"github.com/Gwen0x4c3/team-sync-server/project-user/router"
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +17,6 @@ func (ur *UserRouter) Route(r *gin.Engine) {
 }
 
 func init() {
-	log.Println("Init user router")
+	logs.Log.Info("Init user router")
 	router.Register(&UserRouter{})
 }

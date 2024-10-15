@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+	"github.com/Gwen0x4c3/team-sync-server/project-common/logs"
 	"github.com/Gwen0x4c3/team-sync-server/project-user/pkg/constant"
 	"github.com/Gwen0x4c3/team-sync-server/project-user/pkg/dao"
 	"github.com/Gwen0x4c3/team-sync-server/project-user/pkg/model"
@@ -45,7 +46,7 @@ func (handler *Handler) getCaptcha(c *gin.Context) {
 	go func() {
 		// 模拟发送短信服务
 		time.Sleep(2 * time.Second)
-		log.Printf("已向手机号【%s】发送验证码：%s\n", mobile, code)
+		logs.Log.Info(fmt.Sprintf("已向手机号【%s】发送验证码：%s\n", mobile, code))
 
 		// 5. 存储验证码
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
