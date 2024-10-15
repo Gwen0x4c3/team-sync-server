@@ -1,1 +1,8 @@
 .idea/
+logs/*/*
+!logs/info/
+!logs/debug/
+!logs/error/
+logs/info/*
+logs/debug/*
+logs/error/*
