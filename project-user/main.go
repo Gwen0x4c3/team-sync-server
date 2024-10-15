@@ -23,7 +23,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	logs.LG.Info("Init project-user logger")
+	logs.LG.Info("Init %s logger", config.Cfg.Server.Name)
 
 	// 初始化gin
 	r := gin.Default()

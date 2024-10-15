@@ -55,5 +55,5 @@ func (service *LoginService) GetCaptcha(ctx context.Context, msg *CaptchaMessage
 		}
 		log.Printf("将手机号【%s】的验证码%s存入缓存\n", mobile, code)
 	}()
-	return &CaptchaResponse{}, nil
+	return &CaptchaResponse{Code: code}, nil
 }

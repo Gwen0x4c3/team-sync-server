@@ -34,12 +34,12 @@ func (l *Logger) Error(msg string, args ...any) {
 }
 
 type LogConfig struct {
-	DebugFileName string `json:"debugFileName"`
-	InfoFileName  string `json:"infoFileName"`
-	WarnFileName  string `json:"warnFileName"`
-	MaxSize       int    `json:"maxsize"`
-	MaxAge        int    `json:"max_age"`
-	MaxBackups    int    `json:"max_backups"`
+	DebugFileName string
+	InfoFileName  string
+	WarnFileName  string
+	MaxSize       int
+	MaxAge        int
+	MaxBackups    int
 }
 
 // InitLogger 初始化Logger

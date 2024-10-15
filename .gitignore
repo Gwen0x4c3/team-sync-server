@@ -6,3 +6,4 @@ logs/*/*
 logs/info/*
 logs/debug/*
 logs/error/*
+project-*/bin/*
