@@ -1,7 +1,13 @@
 package router
 
 import (
+	"github.com/Gwen0x4c3/team-sync-server/project-common/logs"
+	"github.com/Gwen0x4c3/team-sync-server/project-user/config"
+	loginServiceV1 "github.com/Gwen0x4c3/team-sync-server/project-user/pkg/service/login.service.v1"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"net"
 )
 
 type Router interface {
@@ -35,4 +41,30 @@ func InitRouter(r *gin.Engine) {
 
 func Register(rts ...Router) {
 	routers = append(routers, rts...)
+}
+
+type gRPCConfig struct {
+	Addr         string
+	RegisterFunc func(*grpc.Server)
+}
+
+func RegisterGrpc() *grpc.Server {
+	c := gRPCConfig{
+		Addr: config.Cfg.Grpc.Addr,
+		RegisterFunc: func(server *grpc.Server) {
+			loginServiceV1.RegisterLoginServiceServer(server, loginServiceV1.NewLoginService())
+		},
+	}
+	s := grpc.NewServer()
+	c.RegisterFunc(s)
+	listen, err := net.Listen("tcp", c.Addr)
+	if err != nil {
+		logs.LG.Error("failed to listen: %v", zap.Error(err))
+	}
+	go func() {
+		if err := s.Serve(listen); err != nil {
+			logs.LG.Error("failed to serve: %v", zap.Error(err))
+		}
+	}()
+	return s
 }

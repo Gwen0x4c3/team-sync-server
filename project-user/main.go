@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-	r := gin.Default()
 	// 初始化日志
 	lc := &logs.LogConfig{
 		DebugFileName: config.Cfg.Zap.DebugFileName,
@@ -25,9 +24,17 @@ func main() {
 		panic(err)
 	}
 	logs.LG.Info("Init project-user logger")
+
+	// 初始化gin
+	r := gin.Default()
 	r.Use(logs.GinLogger(), logs.GinRecovery(true))
 
 	// 初始化路由
 	router.InitRouter(r)
-	common.Run(r, config.Cfg.Server.Name, config.Cfg.Server.Addr)
+	grpc := router.RegisterGrpc()
+	stop := func() {
+		grpc.GracefulStop()
+		logs.LG.Info("grpc server stop")
+	}
+	common.Run(r, config.Cfg.Server.Name, config.Cfg.Server.Addr, stop)
 }

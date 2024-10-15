@@ -7,5 +7,5 @@ import (
 
 func main() {
 	r := gin.Default()
-	common.Run(r, "project-api", ":9999")
+	common.Run(r, "project-api", ":9999", nil)
 }

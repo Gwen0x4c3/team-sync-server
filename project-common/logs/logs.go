@@ -1,6 +1,7 @@
 package logs
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
@@ -14,7 +15,23 @@ import (
 	"time"
 )
 
-var LG *zap.Logger
+var LG Logger
+
+type Logger struct {
+	logger *zap.Logger
+}
+
+func (l *Logger) Debug(msg string, args ...any) {
+	l.logger.Debug(fmt.Sprintf(msg, args...))
+}
+
+func (l *Logger) Info(msg string, args ...any) {
+	l.logger.Info(fmt.Sprintf(msg, args...))
+}
+
+func (l *Logger) Error(msg string, args ...any) {
+	l.logger.Error(fmt.Sprintf(msg, args...))
+}
 
 type LogConfig struct {
 	DebugFileName string `json:"debugFileName"`
@@ -39,8 +56,9 @@ func InitLogger(cfg *LogConfig) (err error) {
 	consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
 	std := zapcore.NewCore(consoleEncoder, zapcore.Lock(os.Stdout), zapcore.DebugLevel)
 	core := zapcore.NewTee(debugCore, infoCore, warnCore, std)
-	LG = zap.New(core, zap.AddCaller())
-	zap.ReplaceGlobals(LG) // 替换zap包中全局的logger实例，后续在其他包中只需使用zap.L()调用即可
+	LG = Logger{}
+	LG.logger = zap.New(core, zap.AddCaller())
+	zap.ReplaceGlobals(LG.logger) // 替换zap包中全局的logger实例，后续在其他包中只需使用zap.L()调用即可
 	return
 }
 

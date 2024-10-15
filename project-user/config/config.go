@@ -10,6 +10,7 @@ type Config struct {
 	Server ServerConfig
 	Zap    ZapConfig
 	Redis  RedisConfig
+	Grpc   GrpcConfig
 }
 
 type ServerConfig struct {
@@ -27,9 +28,14 @@ type ZapConfig struct {
 }
 
 type RedisConfig struct {
-	Addr     string `yaml:"addr"`
-	Password string `yaml:"password"`
-	DB       int    `yaml:"db"`
+	Addr     string
+	Password string
+	DB       int
+}
+
+type GrpcConfig struct {
+	Name string
+	Addr string
 }
 
 var Cfg Config

@@ -2,8 +2,7 @@ package common
 
 import (
 	"context"
-	"fmt"
-	"log"
+	"github.com/Gwen0x4c3/team-sync-server/project-common/logs"
 	"os/signal"
 	"syscall"
 
@@ -11,25 +10,29 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Run(r *gin.Engine, srvName, srvAddr string) {
+func Run(r *gin.Engine, srvName, srvAddr string, stop func()) {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 	router, err := graceful.New(r, graceful.WithAddr(srvAddr))
 
 	if err != nil {
-		log.Fatalf("Failed to create server: %s\n", err)
+		logs.LG.Error("Failed to create server: %s\n", err)
 		panic(err)
 	}
 	defer router.Close()
 
 	go func() {
 		if err := router.RunWithContext(ctx); err != nil && err != context.Canceled {
-			log.Fatalf("Failed to start server: %s\n", err)
+			logs.LG.Error("Failed to run server: %s\n", err)
 		}
 	}()
 
-	fmt.Printf("%s is running on %s\n", srvName, srvAddr)
+	logs.LG.Info("%s server is running at %s\n", srvName, srvAddr)
 	<-ctx.Done()
 
-	fmt.Println("Server has been stopped")
+	if stop != nil {
+		stop()
+	}
+
+	logs.LG.Info("Server has been stopped")
 }
