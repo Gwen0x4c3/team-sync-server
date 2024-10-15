@@ -8,6 +8,7 @@ import (
 	"github.com/Gwen0x4c3/team-sync-server/project-user/pkg/dao"
 	"github.com/Gwen0x4c3/team-sync-server/project-user/pkg/model"
 	"github.com/Gwen0x4c3/team-sync-server/project-user/pkg/repo"
+	"go.uber.org/zap"
 	"log"
 	"math/rand"
 	"net/http"
@@ -46,7 +47,7 @@ func (handler *Handler) getCaptcha(c *gin.Context) {
 	go func() {
 		// 模拟发送短信服务
 		time.Sleep(2 * time.Second)
-		logs.Log.Info(fmt.Sprintf("已向手机号【%s】发送验证码：%s\n", mobile, code))
+		logs.LG.Info("已向手机号【%s】发送验证码：%s", zap.String("mobile", mobile), zap.String("code", code))
 
 		// 5. 存储验证码
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
@@ -56,6 +57,7 @@ func (handler *Handler) getCaptcha(c *gin.Context) {
 		err := handler.cache.Put(ctx, constant.MakeRedisKey(redisKey, mobile), code, 2*time.Minute)
 		if err != nil {
 			c.JSON(http.StatusOK, resp.Error(http.StatusInternalServerError, "存储验证码失败"))
+			logs.LG.Error("存储验证码失败", zap.Error(err))
 			log.Fatalf("存储验证码失败：%v\n", err)
 		}
 		log.Printf("将手机号【%s】的验证码%s存入缓存\n", mobile, code)

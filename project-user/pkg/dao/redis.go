@@ -1,8 +1,12 @@
 package dao
 
 import (
+	"github.com/Gwen0x4c3/team-sync-server/project-user/config"
+	_ "github.com/Gwen0x4c3/team-sync-server/project-user/config"
+
 	"context"
 	"github.com/redis/go-redis/v9"
+	"log"
 	"time"
 )
 
@@ -14,13 +18,14 @@ type RedisCache struct {
 
 func init() {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
+		Addr:     config.Cfg.Redis.Addr,
+		Password: config.Cfg.Redis.Password,
+		DB:       config.Cfg.Redis.DB,
 	})
 	Rc = &RedisCache{
 		rdb: rdb,
 	}
+	log.Println("Init redis cache")
 }
 
 func (r *RedisCache) Put(ctx context.Context, key string, value string, expire time.Duration) error {
