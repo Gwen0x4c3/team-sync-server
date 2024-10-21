@@ -1,10 +1,13 @@
 server:
   name: project-api
-  addr: ":80"
+  addr: ":8088"
 zap:
-  debugFileName: "D:\\Learning\\Projects\\GO\\2.go-team-sync\\team-sync-server\\logs\\debug\\project-debug.log"
-  infoFileName: "D:\\Learning\\Projects\\GO\\2.go-team-sync\\team-sync-server\\logs\\info\\project-info.log"
-  warnFileName: "D:\\Learning\\Projects\\GO\\2.go-team-sync\\team-sync-server\\logs\\error\\project-error.log"
+  # debugFileName: "D:\\Learning\\Projects\\GO\\2.go-team-sync\\team-sync-server\\logs\\debug\\project-debug.log"
+  # infoFileName: "D:\\Learning\\Projects\\GO\\2.go-team-sync\\team-sync-server\\logs\\info\\project-info.log"
+  # warnFileName: "D:\\Learning\\Projects\\GO\\2.go-team-sync\\team-sync-server\\logs\\error\\project-error.log"
+  debugFileName: "/home/gwen/codes/go/team-sync-server/logs/debug/project-debug.log"
+  infoFileName: "/home/gwen/codes/go/team-sync-server/logs/info/project-info.log"
+  warnFileName: "/home/gwen/codes/go/team-sync-server/logs/error/project-error.log"
   maxSize: 500
   maxAge: 28
   maxBackups: 3

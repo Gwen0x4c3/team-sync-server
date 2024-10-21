@@ -2,17 +2,17 @@ package login_service_v1
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"math/rand"
+	"time"
+
+	"github.com/Gwen0x4c3/team-sync-server/project-api/pkg/model"
 	common "github.com/Gwen0x4c3/team-sync-server/project-common"
+	"github.com/Gwen0x4c3/team-sync-server/project-common/errs"
 	"github.com/Gwen0x4c3/team-sync-server/project-common/logs"
 	"github.com/Gwen0x4c3/team-sync-server/project-user/pkg/constant"
 	"github.com/Gwen0x4c3/team-sync-server/project-user/pkg/dao"
 	"github.com/Gwen0x4c3/team-sync-server/project-user/pkg/repo"
-	"go.uber.org/zap"
-	"log"
-	"math/rand"
-	"time"
 )
 
 type LoginService struct {
@@ -32,7 +32,7 @@ func (service *LoginService) GetCaptcha(ctx context.Context, msg *CaptchaMessage
 	// 2. 校验参数
 	if !common.VerifyMobile(mobile) {
 		// TODO 以后改成带错误码的返回 model.IllegalMobile
-		return nil, errors.New("手机号格式错误")
+		return nil, errs.GrpcError(model.IllegalMobile)
 	}
 	// 3. 生成验证码（1000-9999）
 	// 随机生成一个4位数的验证码
@@ -41,7 +41,7 @@ func (service *LoginService) GetCaptcha(ctx context.Context, msg *CaptchaMessage
 	go func() {
 		// 模拟发送短信服务
 		time.Sleep(1 * time.Second)
-		logs.LG.Info("已向手机号【%s】发送验证码：%s", zap.String("mobile", mobile), zap.String("code", code))
+		logs.LG.Info("已向手机号【%s】发送验证码：%s\n", mobile, code)
 
 		// 5. 存储验证码
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
@@ -50,10 +50,9 @@ func (service *LoginService) GetCaptcha(ctx context.Context, msg *CaptchaMessage
 		redisKey := constant.MakeRedisKey(constant.UserCaptchaKey, mobile)
 		err := service.cache.Put(ctx, constant.MakeRedisKey(redisKey, mobile), code, 2*time.Minute)
 		if err != nil {
-			logs.LG.Error("存储验证码失败", zap.Error(err))
-			log.Fatalf("存储验证码失败：%v\n", err)
+			logs.LG.Error("存储验证码失败：%v\n", err)
 		}
-		log.Printf("将手机号【%s】的验证码%s存入缓存\n", mobile, code)
+		logs.LG.Info("将手机号【%s】的验证码%s存入缓存\n", mobile, code)
 	}()
 	return &CaptchaResponse{Code: code}, nil
 }

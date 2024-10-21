@@ -2,9 +2,10 @@ package common
 
 import (
 	"context"
-	"github.com/Gwen0x4c3/team-sync-server/project-common/logs"
 	"os/signal"
 	"syscall"
+
+	"github.com/Gwen0x4c3/team-sync-server/project-common/logs"
 
 	"github.com/gin-contrib/graceful"
 	"github.com/gin-gonic/gin"
