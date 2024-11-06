@@ -1,8 +1,7 @@
 package model
 
-import common "github.com/Gwen0x4c3/team-sync-server/project-common"
+import "github.com/Gwen0x4c3/team-sync-server/project-common/errs"
 
-const (
-	IllegalMobile common.BusinessCode = 2001 // 手机号格式错误
-
+var (
+	IllegalMobile = errs.NewError(2001, "手机号格式不正确")
 )
